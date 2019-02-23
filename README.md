@@ -1,7 +1,6 @@
-Bruce’s Blocks
-==============
-
 ![Alt text](Banner.png "Bruce’s Blocks")
+
+## Bruce’s Blocks
 
 Features
 * Manipulate a text file as a collection of graphical blocks
