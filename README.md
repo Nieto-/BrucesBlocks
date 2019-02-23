@@ -1,6 +1,7 @@
-![Alt text](Banner.png "Bruce’s Blocks")
-
 ## Bruce’s Blocks
+### by Bruce Greene
+
+![Alt text](Banner.jpg "Bruce’s Blocks")
 
 Features
 * Manipulate a text file as a collection of graphical blocks
