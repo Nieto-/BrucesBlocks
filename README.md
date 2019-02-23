@@ -1,9 +1,8 @@
-## Bruce’s Blocks
-### by Bruce Greene
+### Bruce’s Blocks by Bruce Greene
 
 ![Alt text](Banner.jpg "Bruce’s Blocks")
 
-Features
+### Features
 * Manipulate a text file as a collection of graphical blocks
 * Standard editor Ctrl commands
 * Multi-select block cut, copy, delete and grouping
