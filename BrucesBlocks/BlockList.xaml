@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="BrucesBlocks.BlockList" x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BrucesBlocks"
+             mc:Ignorable="d" 
+             d:DesignHeight="130" d:DesignWidth="400" Style="{DynamicResource BlockListStyle}">
+
+    <Grid MouseDown="OnMouseDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Name="rowTop" Height="60" />
+            <RowDefinition Name="rowSplitter" Height="Auto" />
+            <RowDefinition Name="rowBottom" Height="*" />
+        </Grid.RowDefinitions>
+
+        <ListBox Name="listBlocks" Grid.Row="0" Background="{DynamicResource BackgroundBrush2}" VerticalAlignment="Top" SelectionMode="Extended"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="OnSelectionChanged">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <local:DragPanel Loaded="DragPanel_Loaded" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+
+        <GridSplitter Name="splitter" Grid.Row="1" Height="6" VerticalAlignment="Center" HorizontalAlignment="Stretch" DragCompleted="Splitter_DragCompleted" />
+
+        <Grid Name="gridGroupList" Grid.Row="2" MouseDown="OnMouseDownGroupList">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Border Name="bdrBar" Grid.Column="0" Style="{DynamicResource CloseBarStyle}" MouseDown="OnMouseDownBar">
+                <Button Style="{DynamicResource CloseButtonStyle}" VerticalAlignment="Top" Click="CloseGroupList_Click">
+                    <TextBlock Text="&#xf00d;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="12" />
+                </Button>
+            </Border>
+            <ContentControl Name="ccGroupList" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" Focusable="False" />
+        </Grid>
+    </Grid>
+</UserControl>
