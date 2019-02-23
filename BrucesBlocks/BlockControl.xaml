@@ -5,15 +5,15 @@
 
     <Grid Height="64" Width="128">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="64" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Image Name="image" Grid.Column="0" Source="Images/blockPalette.png" Stretch="None" Width="64" VerticalAlignment="Center" />
+        <Image Name="image" Grid.Column="0" Source="Images/blockPalette.png" VerticalAlignment="Center" />
         <StackPanel Grid.Column="1" Margin="2,0,0,0" VerticalAlignment="Center">
             <TextBlock Name="tb1" Text="Palette" />
             <TextBlock Name="tb2" Text="for" />
-            <TextBlock Name="tb3" Text="painting" />
+            <TextBlock Name="tb3" Text="colors" />
         </StackPanel>
     </Grid>
 </UserControl>

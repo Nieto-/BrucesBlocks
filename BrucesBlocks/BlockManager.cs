@@ -168,7 +168,7 @@ namespace BrucesBlocks
 
         private void WriteLines(StreamWriter sw, IBlock[] blocks, ref int indent)
         {
-            foreach (var block in blocks)
+            foreach (IBlock block in blocks)
             {
                 for (int i = 0; i < indent; i++) sw.Write("  ");
                 sw.WriteLine(block.ToString().Trim());
@@ -195,7 +195,7 @@ namespace BrucesBlocks
 
         private void ToStringBuilder(StringBuilder sb, IBlock[] blocks, ref int indent)
         {
-            foreach (var block in blocks)
+            foreach (IBlock block in blocks)
             {
                 for (int i = 0; i < indent; i++) sb.Append("  ");
                 sb.AppendLine(block.ToString().Trim());
