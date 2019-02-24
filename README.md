@@ -2,6 +2,9 @@
 
 ![Alt text](Banner.jpg "Bruce’s Blocks")
 
+CodeProject article:
+(https://www.codeproject.com/Articles/1278128/Bruce-s-Blocks)
+
 ### Features
 * Manipulate a text file as a collection of graphical blocks
 * Standard editor Ctrl commands
