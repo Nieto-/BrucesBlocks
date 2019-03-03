@@ -39,8 +39,8 @@ namespace BrucesBlocks
             SelectedBrush = (SolidColorBrush)FindResource("SelectedBrush");
             UnselectedBrush = (SolidColorBrush)FindResource("UnselectedBrush");
             bdrBar.Background = selected ? SelectedBrush : UnselectedBrush;
-            if (rp != null)
-                rp.UpdateBrushes();
+            if (dp != null)
+                dp.UpdateBrushes();
             if (GroupList != null)
                 GroupList.UpdateBrushes();
         }
@@ -109,9 +109,9 @@ namespace BrucesBlocks
             get
             {
                 List<IBlock> blockList = new List<IBlock>();
-                if (rp != null)
+                if (dp != null)
                 {
-                    foreach (var item in rp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
+                    foreach (var item in dp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
                         blockList.Add((IBlock)item.Tag);
                 }
                 else
@@ -132,10 +132,10 @@ namespace BrucesBlocks
         {
             get
             {
-                if (rp != null)
+                if (dp != null)
                 {
                     List<IBlock> blockList = new List<IBlock>();
-                    foreach (var item in rp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
+                    foreach (var item in dp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
                     {
                         if (item.IsSelected)
                             blockList.Add((IBlock)item.Tag);
@@ -153,11 +153,11 @@ namespace BrucesBlocks
         {
             get
             {
-                if (rp != null)
+                if (dp != null)
                 {
                     List<IBlock> blockList = new List<IBlock>();
                     bool started = false;
-                    foreach (var item in rp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
+                    foreach (var item in dp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
                     {
                         if (item.IsSelected)
                         {
@@ -258,12 +258,12 @@ namespace BrucesBlocks
         public static event EventHandler OrderChanged;
         public static event EventHandler SelectionChanged;
 
-        private DragPanel rp;
+        private DragPanel dp;
 
         private void DragPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            rp = (DragPanel)sender;
-            rp.OrderChanged += OnOrderChanged;
+            dp = (DragPanel)sender;
+            dp.OrderChanged += OnOrderChanged;
         }
 
         private void OnOrderChanged(object sender, EventArgs e)
