@@ -39,8 +39,6 @@ namespace BrucesBlocks
             SelectedBrush = (SolidColorBrush)FindResource("SelectedBrush");
             UnselectedBrush = (SolidColorBrush)FindResource("UnselectedBrush");
             bdrBar.Background = selected ? SelectedBrush : UnselectedBrush;
-            if (dp != null)
-                dp.UpdateBrushes();
             if (GroupList != null)
                 GroupList.UpdateBrushes();
         }
@@ -53,10 +51,20 @@ namespace BrucesBlocks
 
         public void Add(IBlock[] blocks)
         {
-            foreach (var block in blocks)
+            foreach (IBlock block in blocks)
             {
                 listBlocks.Items.Add(block.BlockItem);
                 block.BlockGroup = ParentGroup;
+            }
+        }
+
+        public void Insert(int index, IBlock[] blocks)
+        {
+            foreach (IBlock block in blocks)
+            {
+                listBlocks.Insert(index, block.BlockItem);
+                block.BlockGroup = ParentGroup;
+                ++index;
             }
         }
 
@@ -109,16 +117,8 @@ namespace BrucesBlocks
             get
             {
                 List<IBlock> blockList = new List<IBlock>();
-                if (dp != null)
-                {
-                    foreach (var item in dp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
-                        blockList.Add((IBlock)item.Tag);
-                }
-                else
-                {
-                    foreach (var item in listBlocks.Items)
-                        blockList.Add((IBlock)((ListBoxItem)item).Tag);
-                }
+                foreach (var item in listBlocks.ItemsInOrder)
+                    blockList.Add((IBlock)item.Tag);
                 return blockList.ToArray();
             }
             set
@@ -132,20 +132,10 @@ namespace BrucesBlocks
         {
             get
             {
-                if (dp != null)
-                {
-                    List<IBlock> blockList = new List<IBlock>();
-                    foreach (var item in dp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
-                    {
-                        if (item.IsSelected)
-                            blockList.Add((IBlock)item.Tag);
-                    }
-                    return blockList.ToArray();
-                }
-                else
-                {
-                    return new IBlock[0];
-                }
+                List<IBlock> blockList = new List<IBlock>();
+                foreach (var item in listBlocks.SelectedItemsInOrder)
+                    blockList.Add((IBlock)item.Tag);
+                return blockList.ToArray();
             }
         }
 
@@ -153,28 +143,21 @@ namespace BrucesBlocks
         {
             get
             {
-                if (dp != null)
+                List<IBlock> blockList = new List<IBlock>();
+                bool started = false;
+                foreach (var item in listBlocks.ItemsInOrder)
                 {
-                    List<IBlock> blockList = new List<IBlock>();
-                    bool started = false;
-                    foreach (var item in dp.Children.OfType<ListBoxItem>().OrderBy(DragPanel.GetOrder))
+                    if (item.IsSelected)
                     {
-                        if (item.IsSelected)
-                        {
-                            blockList.Add((IBlock)item.Tag);
-                            started = true;
-                        }
-                        else if (started)
-                        {
-                            break;
-                        }
+                        blockList.Add((IBlock)item.Tag);
+                        started = true;
                     }
-                    return blockList.ToArray();
+                    else if (started)
+                    {
+                        break;
+                    }
                 }
-                else
-                {
-                    return new IBlock[0];
-                }
+                return blockList.ToArray();
             }
         }
 
@@ -258,15 +241,7 @@ namespace BrucesBlocks
         public static event EventHandler OrderChanged;
         public static event EventHandler SelectionChanged;
 
-        private DragPanel dp;
-
-        private void DragPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            dp = (DragPanel)sender;
-            dp.OrderChanged += OnOrderChanged;
-        }
-
-        private void OnOrderChanged(object sender, EventArgs e)
+        private void OnOrderChanged(object sender, RoutedEventArgs e)
         {
             if (ParentGroup != null)
                 ParentGroup.Blocks = Blocks;
@@ -314,6 +289,29 @@ namespace BrucesBlocks
 
             if (SelectionChanged != null)
                 SelectionChanged(this, new EventArgs());
+        }
+
+        private void Layout_Click(object sender, RoutedEventArgs e)
+        {
+            if (GroupList != null)
+            {
+                switch (GroupList.listBlocks.Layout)
+                {
+                    case DragListBox.ELayout.RowMajor:
+                        GroupList.listBlocks.Layout = DragListBox.ELayout.ColumnMajor;
+                        break;
+                    case DragListBox.ELayout.ColumnMajor:
+                        GroupList.listBlocks.Layout = DragListBox.ELayout.SingleRow;
+                        break;
+                    case DragListBox.ELayout.SingleRow:
+                        GroupList.listBlocks.Layout = DragListBox.ELayout.SingleColumn;
+                        break;
+                    case DragListBox.ELayout.SingleColumn:
+                        GroupList.listBlocks.Layout = DragListBox.ELayout.RowMajor;
+                        break;
+                }
+                btnLayout.ToolTip = GroupList.listBlocks.Layout.ToString();
+            }
         }
 
         private void CloseGroupList_Click(object sender, RoutedEventArgs e)

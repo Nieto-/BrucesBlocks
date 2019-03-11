@@ -14,14 +14,8 @@
             <RowDefinition Name="rowBottom" Height="*" />
         </Grid.RowDefinitions>
 
-        <ListBox Name="listBlocks" Grid.Row="0" Background="{DynamicResource BackgroundBrush2}" VerticalAlignment="Top" SelectionMode="Extended"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="OnSelectionChanged">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <local:DragPanel Loaded="DragPanel_Loaded" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
+        <local:DragListBox x:Name="listBlocks" Grid.Row="0" Layout="RowMajor" SelectionMode="Extended"
+            SelectionChanged="OnSelectionChanged" OrderChanged="OnOrderChanged" />
 
         <GridSplitter Name="splitter" Grid.Row="1" Height="6" VerticalAlignment="Center" HorizontalAlignment="Stretch" DragCompleted="Splitter_DragCompleted" />
 
@@ -32,9 +26,14 @@
             </Grid.ColumnDefinitions>
 
             <Border Name="bdrBar" Grid.Column="0" Style="{DynamicResource CloseBarStyle}" MouseDown="OnMouseDownBar">
-                <Button Style="{DynamicResource CloseButtonStyle}" VerticalAlignment="Top" Click="CloseGroupList_Click">
-                    <TextBlock Text="&#xf00d;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="12" />
-                </Button>
+                <StackPanel VerticalAlignment="Top">
+                    <Button Style="{DynamicResource CloseButtonStyle}" Click="CloseGroupList_Click">
+                        <TextBlock Text="&#xf00d;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="12" />
+                    </Button>
+                    <Button Name="btnLayout" Click="Layout_Click" ToolTip="Layout Options">
+                        <TextBlock Text="&#xf58d;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="12" />
+                    </Button>
+                </StackPanel>
             </Border>
             <ContentControl Name="ccGroupList" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" Focusable="False" />
         </Grid>

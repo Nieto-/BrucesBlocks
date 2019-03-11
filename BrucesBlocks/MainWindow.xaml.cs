@@ -161,30 +161,25 @@ namespace BrucesBlocks
             else if (count == sbl.listBlocks.Items.Count)
                 prompt = "Group All Blocks?";
             else
-                prompt = string.Format("Group {0} Selected Blocks?", sbl.listBlocks.SelectedItems.Count);
+                prompt = string.Format("Group {0} Selected Blocks?", count);
 
             if (MessageBox.Show(prompt, "Block Editor", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
             {
                 inSelectionChanged = true;
+                int index = sbl.listBlocks.SelectedItemIndex;
                 IBlockGroup group = BlockManager.NewBlockGroup();
-                List<IBlock> blockList = new List<IBlock>();
-                blockList.AddRange(sbl.Blocks);
 
-                IBlock[] selectedBlocks = sbl.AdjacentSelectedBlocks;
-                int index = blockList.IndexOf(selectedBlocks[0]);
-                blockList.Insert(index, group);
-                foreach (IBlock block in selectedBlocks)
+                IBlock[] blocks = sbl.AdjacentSelectedBlocks;
+                foreach (IBlock block in blocks)
                 {
                     group.Add(block);
-                    blockList.Remove(block);
+                    sbl.listBlocks.Items.Remove(block.BlockItem);
+                    sbl.listBlocks.ResetItemIndex(block.BlockItem);
                 }
-                foreach (IBlock block in blockList)
-                    block.NewBlockItem();
-                sbl.Clear();
-                sbl.Add(blockList.ToArray());
+
+                sbl.listBlocks.Insert(index, group.BlockItem);
                 sbl.listBlocks.SelectedItem = group.BlockItem;
                 listCode.UnselectAll();
-
                 if (sbl.ParentGroup != null)
                     sbl.ParentGroup.Blocks = sbl.Blocks;
 
@@ -198,8 +193,8 @@ namespace BrucesBlocks
         {
             var sbl = BlockList.GetSelectedBlockList();
             ListBoxItem item = (ListBoxItem)sbl.listBlocks.SelectedItem;
-            IBlock block = (IBlock)item.Tag;
-            if (!(block is IBlockGroup))
+            IBlockGroup group = item.Tag as IBlockGroup;
+            if (group == null)
             {
                 System.Media.SystemSounds.Beep.Play();
                 return;
@@ -208,17 +203,11 @@ namespace BrucesBlocks
             if (MessageBox.Show("Ungroup Selected Group?", "Block Editor", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
             {
                 inSelectionChanged = true;
-                IBlockGroup group = (IBlockGroup)block;
-                List<IBlock> blockList = new List<IBlock>();
-                blockList.AddRange(sbl.Blocks);
-                int index = blockList.IndexOf(group);
-                blockList.InsertRange(index, group.Blocks);
-                blockList.Remove(group);
+                int index = sbl.listBlocks.SelectedItemIndex;
+                sbl.listBlocks.Items.Remove(item);
+                sbl.Insert(index, group.Blocks);
                 group.Blocks = new IBlock[] { };
-                foreach (IBlock block2 in blockList)
-                    block2.NewBlockItem();
-                sbl.Clear();
-                sbl.Add(blockList.ToArray());
+
                 listCode.UnselectAll();
                 if (sbl.ParentGroup != null)
                     sbl.ParentGroup.Blocks = sbl.Blocks;
@@ -249,19 +238,18 @@ namespace BrucesBlocks
                 else if (count == sbl.listBlocks.Items.Count)
                     prompt = "Delete All Blocks?";
                 else
-                    prompt = string.Format("Delete {0} Selected Blocks?", sbl.listBlocks.SelectedItems.Count);
+                    prompt = string.Format("Delete {0} Selected Blocks?", count);
             }
 
             if (!confirm || MessageBox.Show(prompt, "Block Editor", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
             {
                 inSelectionChanged = true;
-                ListBoxItem[] items = new ListBoxItem[sbl.listBlocks.SelectedItems.Count];
+                ListBoxItem[] items = new ListBoxItem[count];
                 sbl.listBlocks.SelectedItems.CopyTo(items, 0);
                 foreach (var item in items)
                 {
-                    IBlock block = (IBlock)item.Tag;
                     sbl.listBlocks.Items.Remove(item);
-                    RemoveCode(block);
+                    RemoveCode((IBlock)item.Tag);
                 }
 
                 if (sbl.ParentGroup != null)
@@ -663,6 +651,16 @@ namespace BrucesBlocks
             {
                 if (WindowState != WindowState.Normal)
                     WindowState = WindowState.Normal;
+                ResizeMode = ResizeMode.NoResize;
+                WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized && ResizeMode != ResizeMode.NoResize)
+            {
+                WindowState = WindowState.Normal;
                 ResizeMode = ResizeMode.NoResize;
                 WindowState = WindowState.Maximized;
             }

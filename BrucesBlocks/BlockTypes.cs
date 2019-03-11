@@ -18,8 +18,6 @@ namespace BrucesBlocks
         ListBoxItem CodeItem { get; }
         /// <summary>Creates a new block from a line of gcode, or null if no match.</summary>
         IBlock NewBlock(string line);
-        /// <summary>For internal editor use.</summary>
-        void NewBlockItem();
     }
 
     /// <summary>Interface for block types that maintain a group of child blocks.</summary>
@@ -53,17 +51,6 @@ namespace BrucesBlocks
         protected BlockControl control;
         protected ListBoxItem blockItem;
         protected ListBoxItem codeItem;
-
-        public void NewBlockItem()
-        {
-            blockItem.Tag = null;  // prevent memory leak
-            blockItem.Content = null;
-
-            blockItem = new ListBoxItem();
-            blockItem.Tag = this;
-            blockItem.FocusVisualStyle = null;
-            blockItem.Content = control;
-        }
 
         public ListBoxItem BlockItem { get { return blockItem; } }
 
