@@ -235,8 +235,8 @@ namespace BrucesBlocks
                 {
                     draggingObject.Effect = new DropShadowEffect()
                     {
-                        ShadowDepth = 0,
-                        BlurRadius = 8,
+                        ShadowDepth = 1,
+                        BlurRadius = 6,
                         Color = DropShadowColor
                     };
                 }

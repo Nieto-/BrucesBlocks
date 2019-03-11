@@ -92,14 +92,37 @@ namespace BrucesBlocks
         protected SimpleBlock(string name, string label1, string label2)
         {
             this.name = name;
-            this.label1 = label1;
-            this.label2 = label2;
             Configure(GetImage("block" + name), name, label1, label2);
         }
 
         private readonly string name;
-        private readonly string label1;
-        private readonly string label2;
+
+        public override string ToString() { return name; }
+
+        public IBlock NewBlock(string line)
+        {
+            if (line != name)
+                return null;
+
+            return (IBlock)Activator.CreateInstance(GetType());
+        }
+    }
+
+    public abstract class SmallBlock : BlockBase, IBlock
+    {
+        protected SmallBlock(string name, string label1, string label2)
+        {
+            this.name = name;
+
+            controlSmall = new BlockControlSmall();
+            controlSmall.image.Source = GetImage("block" + name);
+            controlSmall.tb1.Text = name;
+            controlSmall.tb2.Text = string.Format("{0} {1}", label1, label2);
+            blockItem.Content = controlSmall;
+        }
+
+        private readonly string name;
+        private BlockControlSmall controlSmall;
 
         public override string ToString() { return name; }
 
@@ -117,7 +140,7 @@ namespace BrucesBlocks
         public BlockBrush() : base("Brush", "for", "painting") { }
     }
 
-    public class BlockBulb : SimpleBlock
+    public class BlockBulb : SimpleBlock  //SmallBlock
     {
         public BlockBulb() : base("Bulb", "for", "light") { }
     }
